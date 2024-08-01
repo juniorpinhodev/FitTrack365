@@ -1,9 +1,19 @@
-const express = require('express');
-const router = express.Router();
+const { Router } = require('express');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./doc.swagger.json');
+const usersRoutes = require('./users.routes');
+const AuthController = require('../controllers/AuthController');
+const verifyToken = require('../middlewares/verifyToken');
 
+const routes = new Router();
 
-router.get('/', (req, res) => {
-    res.send('Hello, FitTrack365!');
-});
+// Rota para acessar a documentação Swagger
+routes.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-module.exports = router;
+// Rota de login com validações
+routes.post('/login', AuthController.loginValidations(), AuthController.login);
+
+// Rotas protegidas
+routes.use('/users', verifyToken, usersRoutes);
+
+module.exports = routes;

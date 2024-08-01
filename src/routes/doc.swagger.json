@@ -11,17 +11,78 @@
     "http"
   ],
   "securityDefinitions": {
-    "apiKeyAuth": {
+    "BearerAuth": {
       "type": "apiKey",
       "in": "header",
       "name": "Authorization",
-      "description": "Bearer <token>"
+      "description": "Token JWT para autenticação. Exemplo: 'Bearer {token}'"
     }
   },
-  "paths": {},
-  "security": [
-    {
-      "apiKeyAuth": []
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "Login e obtenção do token JWT",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token JWT gerado com sucesso",
+            "schema": {
+              "$ref": "#/definitions/Token"
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas"
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "Lista de usuários",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários"
+          },
+          "401": {
+            "description": "Token inválido ou expirado"
+          }
+        }
+      }
     }
-  ]
+  },
+  "definitions": {
+    "Login": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "senha": {
+          "type": "string"
+        }
+      },
+      "required": ["email", "senha"]
+    },
+    "Token": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    }
+  }
 }
