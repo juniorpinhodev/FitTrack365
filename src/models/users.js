@@ -1,9 +1,7 @@
-const { DataTypes } = require("sequelize");
-const connection = require("../database/connection");
-const { hashSync } = require('bcryptjs');
-const ExerciseLocal = require("./exerciseLocal");
+const { DataTypes } = require('sequelize');
+const connection = require('../database/connection');
 
-const User = connection.define('users', {
+const User = connection.define('User', {
   nome: {
     type: DataTypes.STRING,
     allowNull: false
@@ -34,17 +32,16 @@ const User = connection.define('users', {
     type: DataTypes.DATEONLY,
     allowNull: false
   }
+}, {
+  hooks: {
+    beforeSave: (user) => {
+      if (user.senha) {
+        user.senha = hashSync(user.senha, 10);
+      }
+      return user;
+    }
+  },
+  tableName: 'users'
 });
-
-// Hooks
-User.beforeSave((user) => {
-  if (user.senha) {
-    user.senha = hashSync(user.senha, 10);
-  }
-  return user;
-});
-
-// Associações
-User.hasMany(ExerciseLocal, { foreignKey: 'userId', as: 'exerciseLocals' });
 
 module.exports = User;

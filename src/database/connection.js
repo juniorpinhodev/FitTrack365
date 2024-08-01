@@ -1,10 +1,6 @@
 const { Sequelize } = require('sequelize');
-const config = require('../config/database.config');
+const databaseConfig = require('../config/database.config');
 
-const connection = new Sequelize(config.database, config.username, config.password, {
-    host: config.host,
-    dialect: config.dialect,
-    port: config.port,
-});
+const connection = new Sequelize(databaseConfig);
 
 module.exports = connection;

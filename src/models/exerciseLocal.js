@@ -1,8 +1,12 @@
-const { DataTypes } = require("sequelize");
-const connection = require("../database/connection");
-const User = require("./users");
+const { DataTypes } = require('sequelize');
+const connection = require('../database/connection');
 
-const ExerciseLocal = connection.define('exerciseLocals', {
+const ExerciseLocal = connection.define('ExerciseLocal', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
   nome: {
     type: DataTypes.STRING,
     allowNull: false
@@ -16,7 +20,7 @@ const ExerciseLocal = connection.define('exerciseLocals', {
     allowNull: true
   },
   coordenadas: {
-    type: DataTypes.STRING ,
+    type: DataTypes.STRING,
     allowNull: true
   },
   google_maps_link: {
@@ -24,10 +28,8 @@ const ExerciseLocal = connection.define('exerciseLocals', {
     allowNull: true
   }
 }, {
-  timestamps: true, // Adiciona os campos createdAt e updatedAt
+  timestamps: true,
+  tableName: 'exercise_locals'
 });
-
-// Associação com o modelo User
-ExerciseLocal.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
 module.exports = ExerciseLocal;

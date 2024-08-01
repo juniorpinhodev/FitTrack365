@@ -3,7 +3,7 @@ const cors = require('cors');
 const routes = require("./routes/routes");
 const connection = require("./database/connection");
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./routes/doc.swagger.json'); // Caminho para o arquivo Swagger JSON
+const swaggerDocument = require('./routes/doc.swagger.json');
 const APP_PORT = process.env.APP_PORT || 3000;
 
 class Server {
@@ -11,14 +11,14 @@ class Server {
     constructor(server = express()) {
         this.middlewares(server);
         this.database();
-        server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument)); // Configura o Swagger UI
+        server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
         server.use(routes);
         this.initializeServer(server);
     }
 
     async middlewares(server) {
         console.log("Executando os middlewares");
-        server.use(cors()); // Quando tiver em Produção Habilita os Cors
+        server.use(cors());
         server.use(express.json());
         console.log("Middlewares executados");
     }
@@ -27,6 +27,7 @@ class Server {
         try {
             console.log("Conectando ao banco de dados");
             await connection.authenticate();
+            console.log("Banco de dados conectado com sucesso!");
         } catch (error) {
             console.log("Erro ao conectar ao banco de dados: ", error);
         }
