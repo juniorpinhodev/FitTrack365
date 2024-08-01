@@ -1,24 +1,8 @@
 const { Router } = require('express');
-const router = Router();
+const UserController = require('../controllers/UserController');
 
-// obter todos os usuários
-router.get('/', (req, res) => {
-    res.send('Lista de usuários');
-});
+const usersRoutes = new Router();
 
-// cria um novo usuário
-router.post('/', (req, res) => {
-    res.send('Criar um novo usuário');
-});
+usersRoutes.post('/', UserController.criarConta);
 
-// edita um usuário existente
-router.put('/:id', (req, res) => {
-    res.send(`Atualizar o usuário com ID ${req.params.id}`);
-});
-
-// deletar um usuário
-router.delete('/:id', (req, res) => {
-    res.send(`Deletar o usuário com ID ${req.params.id}`);
-});
-
-module.exports = router;
+module.exports = usersRoutes;

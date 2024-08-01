@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const { hashSync } = require('bcryptjs');
 const connection = require('../database/connection');
 
 const User = connection.define('User', {

@@ -44,6 +44,37 @@
         }
       }
     },
+    "/usuario": {
+      "post": {
+        "summary": "Criação de novo usuário",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
+            }
+          },
+          "400": {
+            "description": "Erro de validação"
+          },
+          "409": {
+            "description": "Conta ou CPF já existe"
+          },
+          "500": {
+            "description": "Erro no servidor"
+          }
+        }
+      }
+    },
     "/users": {
       "get": {
         "summary": "Lista de usuários",
@@ -81,6 +112,50 @@
       "properties": {
         "token": {
           "type": "string"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string"
+        },
+        "sexo": {
+          "type": "string",
+          "enum": ["Masculino", "Feminino", "Outro"]
+        },
+        "cpf": {
+          "type": "string"
+        },
+        "endereco": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "senha": {
+          "type": "string"
+        },
+        "data_nascimento": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "required": ["nome", "sexo", "cpf", "email", "senha", "data_nascimento"]
+    },
+    "UserResponse": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     }
