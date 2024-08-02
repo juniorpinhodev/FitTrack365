@@ -92,6 +92,42 @@
           }
         }
       }
+    },
+    "/local": {
+      "post": {
+        "summary": "Cadastro de novo local",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Local"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Local cadastrado com sucesso",
+            "schema": {
+              "$ref": "#/definitions/Local"
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -158,6 +194,30 @@
           "format": "date-time"
         }
       }
+    },
+    "Local": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string"
+        },
+        "endereco": {
+          "type": "string"
+        },
+        "descricao": {
+          "type": "string"
+        },
+        "coordenadas": {
+          "type": "string"
+        },
+        "google_maps_link": {
+          "type": "string"
+        },
+        "usuarioId": {
+          "type": "integer"
+        }
+      },
+      "required": ["nome", "endereco", "usuarioId"]
     }
   }
 }
