@@ -26,6 +26,14 @@ const ExerciseLocal = connection.define('ExerciseLocal', {
   google_maps_link: {
     type: DataTypes.STRING,
     allowNull: true
+  },
+  usuarioId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'users',
+      key: 'id'
+    }
   }
 }, {
   timestamps: true,

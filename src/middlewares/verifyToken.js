@@ -2,18 +2,26 @@ const { verify } = require('jsonwebtoken');
 
 function verifyToken(request, response, next) {
     try {
-        const token = request.headers.authorization;
+        // Verifique se o cabeçalho de autorização está presente
+        const authorizationHeader = request.headers.authorization;
 
-        if (!token) {
+        if (!authorizationHeader) {
             return response
                 .status(400)
                 .json({ mensagem: 'Token ausente. Por favor, forneça um token válido.' });
         }
 
-        const jwt = token.split(" ");
+        // Verifique o formato do token
+        const [scheme, token] = authorizationHeader.split(' ');
+
+        if (scheme !== 'Bearer' || !token) {
+            return response
+                .status(400)
+                .json({ mensagem: 'Formato do token inválido. Use o formato "Bearer {token}".' });
+        }
 
         // Verifique o token JWT usando a chave secreta
-        const result = verify(jwt[1], process.env.JWT_SECRET);
+        const result = verify(token, process.env.JWT_SECRET);
 
         // Anexe o ID do usuário ao objeto de solicitação
         request.usuarioId = result.id;
