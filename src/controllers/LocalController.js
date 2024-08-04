@@ -6,11 +6,12 @@ class LocalController {
   // Método para criar um novo local
   async criar(request, response) {
     try {
-      const { nome, endereco, descricao, coordenadas, google_maps_link, usuarioId } = request.body;
+      const { nome, descricao, localidade, latitude, longitude, google_maps_link, usuarioId } = request.body;
+
 
       // Validação dos dados
-      if (!nome || !endereco || !usuarioId) {
-        return response.status(400).json({ mensagem: 'Nome do local, endereço e usuário são obrigatórios' });
+      if (!nome || !localidade || !usuarioId) {
+        return response.status(400).json({ mensagem: 'Nome do local, localidade e usuário são obrigatórios' });
       }
 
       // Verifica se o usuário existe
@@ -20,7 +21,16 @@ class LocalController {
       }
 
       // Cria o local
-      const local = await ExerciseLocal.create({ nome, descricao, localidade: endereco, coordenadas, google_maps_link });
+      const local = await ExerciseLocal.create({
+        nome,
+        descricao,
+        localidade,
+        latitude,
+        longitude,
+        google_maps_link,
+        usuarioId
+      });
+
       return response.status(201).json(local);
     } catch (error) {
       console.error(error);
@@ -67,31 +77,33 @@ class LocalController {
   async atualizar(request, response) {
     try {
       const { local_id } = request.params;
-      const { nome, endereco, descricao, coordenadas, google_maps_link } = request.body;
+      const { nome, localidade, descricao, latitude, longitude, google_maps_link } = request.body;
       const usuarioId = request.usuarioId;
-
+  
       // Encontra o local específico e verifica se pertence ao usuário autenticado
       const local = await ExerciseLocal.findOne({ where: { id: local_id, usuarioId } });
-
+  
       if (!local) {
         return response.status(404).json({ mensagem: 'Local não encontrado ou acesso não autorizado' });
       }
-
+  
       // Atualiza o local
       local.nome = nome || local.nome;
-      local.localidade = endereco || local.localidade;
+      local.localidade = localidade || local.localidade;
       local.descricao = descricao || local.descricao;
-      local.coordenadas = coordenadas || local.coordenadas;
+      local.latitude = latitude !== undefined ? latitude : local.latitude;
+      local.longitude = longitude !== undefined ? longitude : local.longitude;
       local.google_maps_link = google_maps_link || local.google_maps_link;
-
+  
       await local.save();
-
+  
       return response.status(200).json(local);
     } catch (error) {
       console.error(error);
-      return response.status(500).json({ mensagem: 'Houve um erro ao atualizar o local' });
+      return response.status(500).json({ mensagem: `Houve um erro ao atualizar o local: ${error.message}` });
     }
   }
+  
 
   // Método para excluir um local específico do usuário autenticado
   async excluir(request, response) {
