@@ -1,3 +1,4 @@
+const axios = require('axios');
 const ExerciseLocal = require('../models/exerciseLocal');  
 const Usuario = require('../models/users');  
 
@@ -112,6 +113,61 @@ class LocalController {
     } catch (error) {
       console.error(error);
       return response.status(500).json({ mensagem: 'Houve um erro ao excluir o local' });
+    }
+  }
+
+  async getGoogleMapsLink(request, response) {
+    try {
+      const { local_id } = request.params;
+      const usuarioId = request.usuarioId;
+  
+      // Encontra o local específico e verifica se pertence ao usuário autenticado
+      const local = await ExerciseLocal.findOne({ where: { id: local_id, usuarioId } });
+  
+      if (!local) {
+        return response.status(404).json({ mensagem: 'Local não encontrado ou acesso não autorizado' });
+      }
+  
+      // Verifica se latitude e longitude estão presentes
+      if (!local.latitude || !local.longitude) {
+        return response.status(404).json({ mensagem: 'Coordenadas não encontradas para o endereço fornecido' });
+      }
+  
+      // Gerar o link do Google Maps com base na latitude e longitude no formato correto
+      const googleMapsLink = `https://www.google.com/maps/place/@${local.latitude},${local.longitude},15z`;
+  
+      return response.status(200).json({ googleMapsLink });
+    } catch (error) {
+      console.error(error);
+      return response.status(500).json({ mensagem: 'Houve um erro ao obter o link do Google Maps' });
+    }
+  }
+  
+  async buscarCoordenadas(request, response) {
+    try {
+      const { localidade } = request.query;
+  
+      // Verifica se o endereço foi fornecido
+      if (!localidade) {
+        return response.status(400).json({ mensagem: 'Endereço não fornecido' });
+      }
+  
+      // Consulta a API do Nominatim para obter as coordenadas
+      const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(localidade)}&format=json&limit=1`;
+      const nominatimResponse = await axios.get(nominatimUrl);
+      const [locationData] = nominatimResponse.data;
+  
+      if (!locationData) {
+        return response.status(404).json({ mensagem: 'Coordenadas não encontradas para o endereço fornecido' });
+      }
+  
+      // Gerar o link do Google Maps com base na latitude e longitude no formato correto
+      const googleMapsLink = `https://www.google.com/maps/place/@${locationData.lat},${locationData.lon}`;
+  
+      return response.status(200).json({ googleMapsLink });
+    } catch (error) {
+      console.error(error);
+      return response.status(500).json({ mensagem: 'Houve um erro ao buscar as coordenadas' });
     }
   }
 

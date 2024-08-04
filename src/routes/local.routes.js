@@ -19,4 +19,7 @@ localRoutes.put('/:local_id', verifyToken, LocalController.atualizar);
 // Rota para excluir um local específico do usuário autenticado
 localRoutes.delete('/:local_id', verifyToken, LocalController.excluir);
 
+// Rota para obter o link do Google Maps de um local específico do usuário autenticado
+localRoutes.get('/:local_id/maps', verifyToken, LocalController.getGoogleMapsLink);
+
 module.exports = localRoutes;

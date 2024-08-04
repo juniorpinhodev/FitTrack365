@@ -19,8 +19,12 @@ const ExerciseLocal = connection.define('ExerciseLocal', {
     type: DataTypes.STRING,
     allowNull: true
   },
-  coordenadas: {
-    type: DataTypes.STRING,
+  latitude: {
+    type: DataTypes.FLOAT, 
+    allowNull: true
+  },
+  longitude: {
+    type: DataTypes.FLOAT, 
     allowNull: true
   },
   google_maps_link: {
