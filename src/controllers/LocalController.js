@@ -26,6 +26,21 @@ class LocalController {
       return response.status(500).json({ mensagem: 'Houve um erro ao cadastrar o local' });
     }
   }
+
+  // Método para listar todos os locais do usuário autenticado
+  async listar(request, response) {
+    try {
+      const usuarioId = request.usuarioId;
+
+      // Encontra todos os locais do usuário autenticado
+      const locais = await ExerciseLocal.findAll({ where: { usuarioId } });
+
+      return response.status(200).json(locais);
+    } catch (error) {
+      console.error(error);
+      return response.status(500).json({ mensagem: 'Houve um erro ao listar os locais' });
+    }
+  }
 }
 
 module.exports = new LocalController();
