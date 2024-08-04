@@ -5,33 +5,49 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('exercise_locals', {
       id: {
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
-        primaryKey: true,
-        allowNull: false
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
       },
       nome: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      endereco: {
+      descricao: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: true
       },
-      tipo: {
-        type: Sequelize.ENUM('Academia', 'Parque', 'Praia', 'Outro'),
-        allowNull: false
+      localidade: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      coordenadas: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      google_maps_link: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      usuarioId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'users', // Nome da tabela de referência
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       createdAt: {
+        type: Sequelize.DATE,
         allowNull: false,
-        type: Sequelize.DATE
+        defaultValue: Sequelize.literal('NOW()')
       },
       updatedAt: {
+        type: Sequelize.DATE,
         allowNull: false,
-        type: Sequelize.DATE
-      },
-      deletedAt: {
-        type: Sequelize.DATE
+        defaultValue: Sequelize.literal('NOW()')
       }
     });
   },

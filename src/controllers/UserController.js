@@ -70,6 +70,24 @@ class UserController {
             return response.status(500).json({ mensagem: 'Erro ao realizar login' });
         }
     }
+
+    async listarUsuarios(request, response) {
+        try {
+            const usuarios = await User.findAll();
+
+            if (usuarios.length === 0) {
+                return response.status(404).json({ mensagem: 'Usuário não encontrado' });
+            }
+
+            return response.status(200).json({
+                mensagem: 'Usuário listado com sucesso',
+                usuarios
+            });
+        } catch (error) {
+            console.error('Erro ao listar usuários:', error);
+            return response.status(500).json({ mensagem: 'Erro ao listar usuários' });
+        }
+    }
 }
 
 module.exports = new UserController();

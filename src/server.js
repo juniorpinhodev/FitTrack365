@@ -1,9 +1,6 @@
-// src/server.js
-
 const express = require('express');
 const cors = require('cors');
-const routes = require('./routes/routes');
-const localRoutes = require('./routes/local.routes'); // Importa as rotas de local
+const routes = require('./routes/routes'); // Apenas importa as rotas principais
 const connection = require('./database/connection');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./routes/doc.swagger.json');
@@ -13,13 +10,11 @@ class Server {
   constructor(server = express()) {
     this.middlewares(server);
     this.database();
-    server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-    server.use('/local', localRoutes); // Adiciona a rota de local
-    server.use(routes);
+    this.routes(server);
     this.initializeServer(server);
   }
 
-  async middlewares(server) {
+  middlewares(server) {
     console.log("Executando os middlewares");
     server.use(cors());
     server.use(express.json());
@@ -36,7 +31,12 @@ class Server {
     }
   }
 
-  async initializeServer(server) {
+  routes(server) {
+    server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    server.use('/', routes); // Configura as rotas principais
+  }
+
+  initializeServer(server) {
     server.listen(APP_PORT, () => {
       console.log(`Servidor rodando na porta ${APP_PORT}!`);
     });

@@ -73,9 +73,7 @@
             "description": "Erro no servidor"
           }
         }
-      }
-    },
-    "/users": {
+      },
       "get": {
         "summary": "Lista de usuários",
         "security": [
@@ -85,7 +83,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Lista de usuários"
+            "description": "Lista de usuários",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UserResponse"
+              }
+            }
           },
           "401": {
             "description": "Token inválido ou expirado"
