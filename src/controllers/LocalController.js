@@ -41,6 +41,26 @@ class LocalController {
       return response.status(500).json({ mensagem: 'Houve um erro ao listar os locais' });
     }
   }
+  
+  // Método para listar um local específico do usuário autenticado
+  async listarPorId(request, response) {
+    try {
+      const { local_id } = request.params;
+      const usuarioId = request.usuarioId;
+
+      // Encontra o local específico e verifica se pertence ao usuário autenticado
+      const local = await ExerciseLocal.findOne({ where: { id: local_id, usuarioId } });
+
+      if (!local) {
+        return response.status(404).json({ mensagem: 'Local não encontrado ou acesso não autorizado' });
+      }
+
+      return response.status(200).json(local);
+    } catch (error) {
+      console.error(error);
+      return response.status(500).json({ mensagem: 'Houve um erro ao buscar o local' });
+    }
+  }
 }
 
 module.exports = new LocalController();
