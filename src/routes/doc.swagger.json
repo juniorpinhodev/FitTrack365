@@ -131,6 +131,163 @@
             "description": "Erro interno do servidor"
           }
         }
+      },
+      "get": {
+        "summary": "Lista de locais do usuário autenticado",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de locais",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Local"
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou expirado"
+          }
+        }
+      }
+    },
+    "/local/{local_id}": {
+      "get": {
+        "summary": "Obtém um local específico do usuário autenticado",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "local_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do local"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Local encontrado",
+            "schema": {
+              "$ref": "#/definitions/Local"
+            }
+          },
+          "404": {
+            "description": "Local não encontrado"
+          },
+          "401": {
+            "description": "Token inválido ou expirado"
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza um local específico do usuário autenticado",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "local_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do local"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Local"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Local atualizado com sucesso",
+            "schema": {
+              "$ref": "#/definitions/Local"
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "404": {
+            "description": "Local não encontrado"
+          },
+          "401": {
+            "description": "Token inválido ou expirado"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Exclui um local específico do usuário autenticado",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "local_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do local"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Local excluído com sucesso"
+          },
+          "404": {
+            "description": "Local não encontrado"
+          },
+          "401": {
+            "description": "Token inválido ou expirado"
+          }
+        }
+      }
+    },
+    "/local/{local_id}/maps": {
+      "get": {
+        "summary": "Obtém o link do Google Maps de um local específico",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "local_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do local"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Link do Google Maps",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "404": {
+            "description": "Local não encontrado"
+          },
+          "401": {
+            "description": "Token inválido ou expirado"
+          }
+        }
       }
     }
   },

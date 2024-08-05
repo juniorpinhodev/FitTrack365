@@ -30,8 +30,8 @@ class LocalController {
         google_maps_link,
         usuarioId
       });
-
-      return response.status(201).json(local);
+      
+      return response.status(201).json({mensagem: 'Local cadastrado com sucesso!', local});
     } catch (error) {
       console.error(error);
       return response.status(500).json({ mensagem: 'Houve um erro ao cadastrar o local' });
@@ -46,7 +46,7 @@ class LocalController {
       // Encontra todos os locais do usuário autenticado
       const locais = await ExerciseLocal.findAll({ where: { usuarioId } });
 
-      return response.status(200).json(locais);
+      return response.status(200).json({mensagem: 'Buscado com sucesso! Locais cadastrados por este usuário', locais});
     } catch (error) {
       console.error(error);
       return response.status(500).json({ mensagem: 'Houve um erro ao listar os locais' });
@@ -66,7 +66,7 @@ class LocalController {
         return response.status(404).json({ mensagem: 'Local não encontrado ou acesso não autorizado' });
       }
 
-      return response.status(200).json(local);
+      return response.status(200).json({ mensagem: 'Local buscado com sucesso!', local });
     } catch (error) {
       console.error(error);
       return response.status(500).json({ mensagem: 'Houve um erro ao buscar o local' });
@@ -97,7 +97,7 @@ class LocalController {
   
       await local.save();
   
-      return response.status(200).json(local);
+      return response.status(200).json({ mensagem: 'Local editado com sucesso!', local });
     } catch (error) {
       console.error(error);
       return response.status(500).json({ mensagem: `Houve um erro ao atualizar o local: ${error.message}` });
@@ -105,7 +105,7 @@ class LocalController {
   }
   
 
-  // Método para excluir um local específico do usuário autenticado
+  // Método para Deletar um local específico do usuário autenticado
   async excluir(request, response) {
     try {
       const { local_id } = request.params;
@@ -115,16 +115,25 @@ class LocalController {
       const local = await ExerciseLocal.findOne({ where: { id: local_id, usuarioId } });
 
       if (!local) {
+        console.log('Local não encontrado ou acesso não autorizado');
         return response.status(404).json({ mensagem: 'Local não encontrado ou acesso não autorizado' });
       }
 
       // Exclui o local
       await local.destroy();
+  
+      return response.status(200).json({ mensagem: 'Local deletado com sucesso!', local });
+      } catch (error) {
+        console.error('Erro no método excluir:', error);
 
-      return response.status(204).send();
-    } catch (error) {
-      console.error(error);
-      return response.status(500).json({ mensagem: 'Houve um erro ao excluir o local' });
+      // Mensagem detalhada de erro
+      if (error.name === 'SequelizeForeignKeyConstraintError') {
+        return response.status(400).json({ mensagem: 'Erro de restrição de chave estrangeira ao excluir o local.' });
+      } else if (error.name === 'SequelizeDatabaseError') {
+        return response.status(500).json({ mensagem: 'Erro no banco de dados ao excluir o local.' });
+      } else {
+        return response.status(500).json({ mensagem: 'Houve um erro ao excluir o local. Por favor, tente novamente mais tarde.' });
+      }
     }
   }
 
@@ -148,7 +157,7 @@ class LocalController {
       // Gerar o link do Google Maps com base na latitude e longitude no formato correto
       const googleMapsLink = `https://www.google.com/maps/place/@${local.latitude},${local.longitude},15z`;
   
-      return response.status(200).json({ googleMapsLink });
+      return response.status(200).json({ mensagem: 'Mapa do local buscado com sucesso!', googleMapsLink });
     } catch (error) {
       console.error(error);
       return response.status(500).json({ mensagem: 'Houve um erro ao obter o link do Google Maps' });
