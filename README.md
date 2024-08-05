@@ -1,6 +1,6 @@
 # Fittrack365
 
-**Fittrack365 é uma plataforma destinada ao gerenciamento de exercícios físicos e à localização de locais adequados para a prática de atividades físicas. 
+Fittrack365 é uma plataforma destinada ao gerenciamento de exercícios físicos e à localização de locais adequados para a prática de atividades físicas. 
 Esta plataforma integra recursos para cadastro de novos usuários, logins, cadastro, busca, edição e exclusão de locais para exercícios físicos.
 
 ## Tecnologias Utilizadas
